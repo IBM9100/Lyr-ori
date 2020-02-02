@@ -10,6 +10,8 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
+import java.awt.*;
+
 public class Main extends SimpleApplication {
 
 
@@ -17,6 +19,7 @@ public class Main extends SimpleApplication {
 
         Main app = new Main();
         app.showSettings = false;
+
 
         AppSettings settings = new AppSettings(true);
         settings.setTitle("My Awesome Game");
@@ -34,6 +37,8 @@ public class Main extends SimpleApplication {
         cam.setRotation(new Quaternion(-0.00414816f, 0.9817784f, -0.18875499f, -0.021575727f));
         flyCam.setMoveSpeed(10);
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
+        reshape(1024,768);
+
 
         model = assetManager.loadModel("Models/arc/ArcDeTriomphe.obj");
         model.scale(0.05f);
@@ -54,6 +59,7 @@ public class Main extends SimpleApplication {
 
     @Override
     public void simpleUpdate(float tpf) {
+
         float speed = FastMath.HALF_PI;
         model.rotate(0,speed*tpf,0);
         //TODO: add update code

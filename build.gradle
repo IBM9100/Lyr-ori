@@ -13,7 +13,7 @@ repositories {
 }
 
 project.ext {
-    jmeVer = '3.2.4-stable'
+    jmeVer = '3.3.0-beta1'
 }
 
 dependencies {

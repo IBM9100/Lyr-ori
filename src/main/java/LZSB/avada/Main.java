@@ -1,19 +1,17 @@
 package LZSB.avada;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
-import com.jme3.scene.Mesh;
-import com.jme3.scene.shape.Box;
+import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 
 public class Main extends SimpleApplication {
 
-    private Geometry geo;
 
     public static void main(String[] args) {
 
@@ -22,30 +20,42 @@ public class Main extends SimpleApplication {
 
         AppSettings settings = new AppSettings(true);
         settings.setTitle("My Awesome Game");
+        settings.setResolution(1024,768);
         app.setSettings(settings);
 
         app.start();
 
     }
-
+    private Spatial model;
     @Override
     public void simpleInitApp() {
-        Mesh box = new Box(1,1,1);
-        Material material = new Material(assetManager,"Common/MatDefs/Light/Lighting.j3md");
-        geo = new Geometry("Box");
-        geo.setMesh(box);
-        geo.setMaterial(material);
+
+        cam.setLocation(new Vector3f(0.41600543f, 3.2057908f, 6.6927643f));
+        cam.setRotation(new Quaternion(-0.00414816f, 0.9817784f, -0.18875499f, -0.021575727f));
+        flyCam.setMoveSpeed(10);
+        viewPort.setBackgroundColor(ColorRGBA.LightGray);
+
+        model = assetManager.loadModel("Models/arc/ArcDeTriomphe.obj");
+        model.scale(0.05f);
+        model.center();
+
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-1,-2,-3));
+        AmbientLight ambientLight = new AmbientLight();
 
-        rootNode.attachChild(geo);
+        ColorRGBA lightColor = new ColorRGBA();
+        sun.setColor(lightColor.mult(1.6f));
+        ambientLight.setColor(lightColor.mult(0.4f));
+
+        rootNode.attachChild(model);
         rootNode.addLight(sun);
+        rootNode.addLight(ambientLight);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-        float speed = FastMath.TWO_PI;
-        geo.rotate(0,speed*tpf,0);
+        float speed = FastMath.HALF_PI;
+        model.rotate(0,speed*tpf,0);
         //TODO: add update code
     }
 

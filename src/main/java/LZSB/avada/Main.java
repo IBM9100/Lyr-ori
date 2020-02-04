@@ -1,6 +1,7 @@
 package LZSB.avada;
 
 import com.jme3.app.SimpleApplication;
+import com.jme3.bounding.BoundingBox;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
@@ -70,13 +71,13 @@ public class Main extends SimpleApplication {
         model.center();
         block.attachChild(model);
 
-        log.info("aaaaaaaaaaaaaaaaaaa");
-
-//        for (int i = 0;i<24;i++){
-//            Spatial temp = model.clone();
-//            temp.move(new Vector3f((i+1) * temp,0f,0f));
-//            block.attachChild();
-//        }
+        //为了拿到 model 的尺寸
+        BoundingBox modelBox = (BoundingBox) model.getWorldBound();
+        for (int i = 0;i<24;i++){
+            Spatial cloneSpatial = model.clone();
+            cloneSpatial.move(new Vector3f((i+1) * 2 *modelBox.getXExtent(),0f,0f));
+            block.attachChild(cloneSpatial);
+        }
 
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-1,-2,-3));

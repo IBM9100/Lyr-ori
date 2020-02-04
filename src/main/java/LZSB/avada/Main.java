@@ -4,19 +4,23 @@ import com.jme3.app.SimpleApplication;
 import com.jme3.light.AmbientLight;
 import com.jme3.light.DirectionalLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.post.FilterPostProcessor;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.system.AppSettings;
 import com.jme3.util.BufferUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.lwjgl.system.MemoryUtil;
 import org.lwjgl.glfw.GLFW;
 import com.jme3.system.lwjgl.LwjglWindow;
-import java.awt.*;
+
 import java.nio.IntBuffer;
 
 public class Main extends SimpleApplication {
+
+    private static final Logger log = LogManager.getFormatterLogger(Main.class);
 
     public static void main(String[] args) {
 
@@ -26,32 +30,53 @@ public class Main extends SimpleApplication {
 
         AppSettings settings = new AppSettings(true);
         settings.setTitle("My Awesome Game");
-
-        settings.setResolution(1024,768);
+        settings.setResolution(800,400);
+        settings.setFrameRate(69);
+        settings.setRenderer(AppSettings.LWJGL_OPENGL45);
+        settings.setSamples(4);
         app.setSettings(settings);
         app.start();
+    }
+
+    public void osAdaptation(){
+        if (GLFW.glfwGetVersionString().contains("retina")){
+            // FIX BUG: Mac OSX Retina Half-Size.
+            IntBuffer framebufferSize = BufferUtils.createIntBuffer(2);
+            long window = ((LwjglWindow)getContext()).getWindowHandle();
+            GLFW.nglfwGetFramebufferSize(window, MemoryUtil.memAddress(framebufferSize), MemoryUtil.memAddress(framebufferSize) + 4);
+            int width = framebufferSize.get(0);
+            int height = framebufferSize.get(1);
+            reshape(width, height);
+        }
     }
     private Spatial model;
     @Override
     public void simpleInitApp() {
-        // FIX BUG: Mac OSX Retina Half-Size.
-        IntBuffer framebufferSize = BufferUtils.createIntBuffer(2);
-        long window = ((LwjglWindow)getContext()).getWindowHandle();
-        GLFW.nglfwGetFramebufferSize(window, MemoryUtil.memAddress(framebufferSize), MemoryUtil.memAddress(framebufferSize) + 4);
-        int width = framebufferSize.get(0);
-        int height = framebufferSize.get(1);
-        reshape(width, height);
+        osAdaptation();
 
-        cam.setLocation(new Vector3f(0.41600543f, 3.2057908f, 6.6927643f));
-        cam.setRotation(new Quaternion(-0.00414816f, 0.9817784f, -0.18875499f, -0.021575727f));
         flyCam.setMoveSpeed(10);
         viewPort.setBackgroundColor(ColorRGBA.LightGray);
 
+        FilterPostProcessor fpp = new FilterPostProcessor(assetManager);
+        fpp.setNumSamples(4);
+        viewPort.addProcessor(fpp);
 
-        model = assetManager.loadModel("Models/arc/ArcDeTriomphe.obj");
-        model.scale(0.05f);
+
+
+        Node block =  new Node();
+
+        model = assetManager.loadModel("Models/block/grass_block/grass_block.obj");
+        model.scale(1f);
         model.center();
+        block.attachChild(model);
 
+        log.info("aaaaaaaaaaaaaaaaaaa");
+
+//        for (int i = 0;i<24;i++){
+//            Spatial temp = model.clone();
+//            temp.move(new Vector3f((i+1) * temp,0f,0f));
+//            block.attachChild();
+//        }
 
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection(new Vector3f(-1,-2,-3));
@@ -61,16 +86,14 @@ public class Main extends SimpleApplication {
         sun.setColor(lightColor.mult(1.6f));
         ambientLight.setColor(lightColor.mult(0.4f));
 
-        rootNode.attachChild(model);
+
+        rootNode.attachChild(block);
         rootNode.addLight(sun);
         rootNode.addLight(ambientLight);
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-
-        float speed = FastMath.HALF_PI;
-        model.rotate(0,speed*tpf,0);
         //TODO: add update code
     }
 

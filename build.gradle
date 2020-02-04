@@ -10,6 +10,7 @@ version '1.0-SNAPSHOT'
 
 repositories {
     jcenter()
+    maven { url "http://dl.bintray.com/jmonkeyengine/org.jmonkeyengine" }
 }
 
 project.ext {
@@ -19,19 +20,28 @@ project.ext {
 dependencies {
     testCompile 'junit:junit:4.12'
 
+    //GUI库
+    implementation "com.simsilica:lemur:1.13.0"
+    implementation "com.simsilica:lemur-proto:1.10.0"
+
+    //日志
+    implementation 'org.apache.logging.log4j:log4j-api:2.13.0'
+    implementation 'org.apache.logging.log4j:log4j-core:2.13.0'
     
     implementation "org.jmonkeyengine:jme3-core:$jmeVer"
     implementation "org.jmonkeyengine:jme3-desktop:$jmeVer"
 
     // implementation "org.jmonkeyengine:jme3-lwjgl:$jmeVer"
-     implementation "org.jmonkeyengine:jme3-lwjgl3:$jmeVer"
-    // implementation "org.jmonkeyengine:jme3-effects:$jmeVer"
-    // implementation "org.jmonkeyengine:jme3-jogg:$jmeVer"
+    implementation "org.jmonkeyengine:jme3-lwjgl3:$jmeVer"
+    implementation "org.jmonkeyengine:jme3-ios:$jmeVer"
+    implementation "org.jmonkeyengine:jme3-effects:$jmeVer"
+    //implementation "org.jmonkeyengine:jme3-jogl:$jmeVer"
+    implementation "org.jmonkeyengine:jme3-jogg:$jmeVer"
     // implementation "org.jmonkeyengine:jme3-plugins:$jmeVer"
 
     // implementation "org.jmonkeyengine:jme3-bullet:$jmeVer"
 
     // implementation "org.jmonkeyengine:jme3-bullet-native:$jmeVer"
-    // implementation "org.jmonkeyengine:jme3-jbullet:$jmeVer"
+    //implementation "org.jmonkeyengine:jme3-jbullet:$jmeVer"
 
 }
